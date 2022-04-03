@@ -6,9 +6,15 @@ using UnityEngine.UI;
 
 public class MainManager : MonoBehaviour
 {
+    //public static MainManager Instance;
+
+    //public static readonly string DEFAULT_PLAYER_NAME = "Player Name";
+
     public Brick BrickPrefab;
     public int LineCount = 6;
     public Rigidbody Ball;
+
+    //public string playerName;
 
     public Text ScoreText;
     public GameObject GameOverText;
@@ -18,10 +24,25 @@ public class MainManager : MonoBehaviour
     
     private bool m_GameOver = false;
 
-    
+    /*
+    private void Awake()
+    {
+        if (Instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
+    */
+
     // Start is called before the first frame update
     void Start()
     {
+        //this.playerName = DEFAULT_PLAYER_NAME;
+
         const float step = 0.6f;
         int perLine = Mathf.FloorToInt(4.0f / step);
         
