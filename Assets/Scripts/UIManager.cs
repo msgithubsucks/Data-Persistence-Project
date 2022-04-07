@@ -13,7 +13,7 @@ public class UIManager : MonoBehaviour
 
     public TMP_InputField playerNameInput;
     public TMP_Text inputDefaultText;
-    public string playerName;
+    private string playerName;
 
     private void Awake()
     {
@@ -25,6 +25,11 @@ public class UIManager : MonoBehaviour
 
         Instance = this;
         DontDestroyOnLoad(gameObject);
+    }
+
+    public string getPlayerName ()
+    {
+        return this.playerName;
     }
 
     private void Start()

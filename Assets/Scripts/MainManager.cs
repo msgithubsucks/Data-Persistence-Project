@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -16,13 +17,18 @@ public class MainManager : MonoBehaviour
     
     private bool m_Started = false;
     private int m_Points;
+
+    private string playerName;
+    private int highScore;
     
     private bool m_GameOver = false;
 
     // Start is called before the first frame update
     void Start()
     {
-        this.BestScoreText.text = ("Best Score : " + UIManager.Instance.playerName + " : 0");
+        this.playerName = UIManager.Instance.getPlayerName();
+        this.LoadHighScore();
+        this.BestScoreText.text = ("Player Name : " + this.playerName + " // Best Overall Score : " + this.highScore);
 
         const float step = 0.6f;
         int perLine = Mathf.FloorToInt(4.0f / step);
@@ -68,11 +74,46 @@ public class MainManager : MonoBehaviour
     {
         m_Points += point;
         ScoreText.text = $"Score : {m_Points}";
+        if (m_Points > this.highScore)
+        {
+            this.highScore = m_Points;
+        }
     }
 
     public void GameOver()
     {
         m_GameOver = true;
+        this.SaveHighScore();
         GameOverText.SetActive(true);
+    }
+
+    public void SaveHighScore ()
+    {
+        SaveData data = new SaveData();
+        data.PlayerName = this.playerName;
+        data.HighScore = this.highScore;
+
+        string json = JsonUtility.ToJson(data);
+
+        File.WriteAllText(Application.persistentDataPath + "/savefile.json", json);
+    }
+
+    public void LoadHighScore ()
+    {
+        string path = Application.persistentDataPath + "/savefile.json";
+        if (File.Exists(path))
+        {
+            string json = File.ReadAllText(path);
+            SaveData data = JsonUtility.FromJson<SaveData>(json);
+
+            this.highScore = data.HighScore;
+        }
+    }
+
+    [System.Serializable]
+    class SaveData
+    {
+        public string PlayerName;
+        public int HighScore;
     }
 }
